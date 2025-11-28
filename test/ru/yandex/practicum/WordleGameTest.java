@@ -95,6 +95,7 @@ class WordleGameTest {
             {
                 this.setAnswer("ночка");
             }
+
             @Override
             public void fillAnswer() {
             }

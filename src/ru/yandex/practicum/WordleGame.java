@@ -53,7 +53,7 @@ public class WordleGame {
 
     private boolean isCorrect = false;
 
-    public boolean isGameOver(){
+    public boolean isGameOver() {
         return isCorrect || steps == 0;
     }
 
@@ -61,44 +61,44 @@ public class WordleGame {
         List<String> dictionaryList = dictionary.getWords();
         boolean success = false;
 
-        while(!success) {
-                if(attempt.isEmpty()){
-                    String hint = getHint();
-                    System.out.println("Подсказка " + hint);
-                    attempt = scanner.nextLine();
-                    continue;
+        while (!success) {
+            if (attempt.isEmpty()) {
+                String hint = getHint();
+                System.out.println("Подсказка " + hint);
+                attempt = scanner.nextLine();
+                continue;
+            }
+            if (attempt.length() != 5) {
+                throw new WordNotFoundInDictionary("В слове должно быть 5 букв");
+            }
+            if (!dictionaryList.contains(attempt)) {
+                throw new WordNotFoundInDictionary("Такого слова в словаре нет");
+            }
+
+
+            for (int i = 0; i < attempt.length(); i++) {
+                char attemptChar = attempt.charAt(i);
+
+                char answerChar = answer.charAt(i);
+                if (attempt.equals(answer)) {
+                    isCorrect = true;
+                    break;
                 }
-                if (attempt.length() != 5) {
-                    throw new WordNotFoundInDictionary("В слове должно быть 5 букв");
+                if (attemptChar == answerChar) {
+                    greenChars.put(i, attemptChar);
+                    yellowChars.remove(attemptChar);
+
+                } else if (answer.contains(String.valueOf(attemptChar))) {
+                    yellowChars.add(attemptChar);
+                    isCorrect = false;
+                } else {
+                    grayChars.add(attemptChar);
+                    isCorrect = false;
                 }
-                if (!dictionaryList.contains(attempt)) {
-                    throw new WordNotFoundInDictionary("Такого слова в словаре нет");
-                }
-
-
-                    for (int i = 0; i < attempt.length(); i++) {
-                        char attemptChar = attempt.charAt(i);
-
-                        char answerChar = answer.charAt(i);
-                        if(attempt.equals(answer)){
-                            isCorrect = true;
-                            break;
-                        }
-                        if (attemptChar == answerChar) {
-                            greenChars.put(i, attemptChar);
-                            yellowChars.remove(attemptChar);
-
-                        } else if (answer.contains(String.valueOf(attemptChar))) {
-                            yellowChars.add(attemptChar);
-                            isCorrect = false;
-                        } else {
-                            grayChars.add(attemptChar);
-                            isCorrect = false;
-                        }
-                    }
-                    steps = steps - 1;
-                    usedWords.add(attempt);
-                success = true;
+            }
+            steps = steps - 1;
+            usedWords.add(attempt);
+            success = true;
 
         }
         return attempt;
@@ -132,18 +132,18 @@ public class WordleGame {
                     }
                 }
             }
-                if (!isValid) {
-                    continue;
+            if (!isValid) {
+                continue;
+            }
+            for (char yellowChar : yellowChars) {
+                if (!word.contains(String.valueOf(yellowChar))) {
+                    isValid = false;
+                    break;
                 }
-                for (char yellowChar : yellowChars) {
-                    if (!word.contains(String.valueOf(yellowChar))) {
-                        isValid = false;
-                        break;
-                    }
-                }
-                if (isValid) {
-                    possibleWords.add(word);
-                }
+            }
+            if (isValid) {
+                possibleWords.add(word);
+            }
         }
         if (possibleWords.isEmpty()) {
             return dictionaryList.get(random.nextInt(dictionaryList.size()));
@@ -165,7 +165,7 @@ public class WordleGame {
                 throw new WordNotFoundInDictionary("Словарь пуст");
             }
             this.answer = dictionaryList.get(random.nextInt(dictionaryList.size()));
-        } catch (WordNotFoundInDictionary e){
+        } catch (WordNotFoundInDictionary e) {
             System.err.println("Ошибка " + e.getMessage());
         }
     }
@@ -174,7 +174,7 @@ public class WordleGame {
     public String charsHint(String attempt) {
         StringBuilder charHint = new StringBuilder();
 
-        for(int i = 0; i < attempt.length(); i++) {
+        for (int i = 0; i < attempt.length(); i++) {
             char attemptChar = attempt.charAt(i);
 
             if (i < answer.length() && attemptChar == answer.charAt(i)) {
@@ -187,7 +187,6 @@ public class WordleGame {
         }
         return charHint.toString();
     }
-
 
 
 }

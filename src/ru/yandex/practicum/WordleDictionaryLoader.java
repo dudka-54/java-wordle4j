@@ -17,19 +17,20 @@ public class WordleDictionaryLoader {
     public WordleDictionaryLoader(PrintWriter log) {
         this.log = log;
     }
+
     public WordleDictionary dictionaryLoader() throws IOException {
         List<String> wordList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("words_ru.txt", StandardCharsets.UTF_8))) {
             while (br.ready()) {
                 String line = br.readLine();
-                if((!line.contains("-")) && (line.length() == 5)) {
+                if ((!line.contains("-")) && (line.length() == 5)) {
                     wordList.add(line.toLowerCase(Locale.ROOT).replace("ё", "е"));
                 }
             }
         } catch (IOException exception) {
             System.err.println("Не удалось загрузить словарь " + exception.getMessage());
         }
-    return new WordleDictionary(wordList, log);
+        return new WordleDictionary(wordList, log);
     }
 
 }
