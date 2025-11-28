@@ -154,7 +154,7 @@ public class WordleGame {
         this.dictionary = dictionary;
         this.dictionaryList = dictionary.getWords();
         this.log = log;
-       fillAnswer();
+        fillAnswer();
     }
 
     public void fillAnswer() {
@@ -175,7 +175,7 @@ public class WordleGame {
 
         for (int i = 0; i < answer.length(); i++) {
             char answerChar = answer.charAt(i);
-            anotherChars.put(answerChar,anotherChars.getOrDefault(answerChar, 0) + 1);
+            anotherChars.put(answerChar, anotherChars.getOrDefault(answerChar, 0) + 1);
         }
 
         for (int i = 0; i < attempt.length(); i++) {
@@ -188,19 +188,18 @@ public class WordleGame {
             }
         }
         for (int i = 0; i < attempt.length(); i++) {
-            if(charHint.charAt(i) == '+'){
+            if (charHint.charAt(i) == '+') {
                 continue;
             }
             char attemptChar = attempt.charAt(i);
 
-            if(anotherChars.getOrDefault(attemptChar, 0) > 0){
+            if (anotherChars.getOrDefault(attemptChar, 0) > 0) {
                 charHint.setCharAt(i, '^');
                 anotherChars.put(attemptChar, anotherChars.get(attemptChar) - 1);
             }
         }
         return charHint.toString();
     }
-
 
 
 }
