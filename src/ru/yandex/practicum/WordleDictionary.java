@@ -1,5 +1,6 @@
 package ru.yandex.practicum;
 
+import java.io.PrintWriter;
 import java.util.List;
 
 /*
@@ -9,6 +10,15 @@ import java.util.List;
  */
 public class WordleDictionary {
 
+    public List<String> getWords() {
+        return words;
+    }
+
+    public WordleDictionary(List<String> words, PrintWriter log) {
+        this.words = words;
+    }
+
     private List<String> words;
+
 
 }
