@@ -51,7 +51,7 @@ class WordleGameTest {
         Scanner scanner = new Scanner(new ByteArrayInputStream("дом\n".getBytes()));
         String attempt = "дом";
 
-        WordNotFoundInDictionary exception = assertThrows(WordNotFoundInDictionary.class,
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> game.makeAttempt(attempt, scanner));
         assertEquals("В слове должно быть 5 букв", exception.getMessage());
     }
