@@ -45,10 +45,12 @@ public class Wordle {
                     }
                 } catch (WordNotFoundInDictionary e) {
                     System.out.println("Ошибка: " + e.getMessage());
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Ошибка: " + e.getMessage());
                 }
             }
             if (wordleGame.isCorrect()) {
-                System.out.println("Поздравляем, это слово верное! Игра окончена!");
+                System.out.println("Поздравляем, вы выиграли! Это слово верное! Игра окончена!");
             } else {
                 System.out.println("Игра окончена. Вы проиграли. Правильное слово - " + wordleGame.getAnswer());
             }

@@ -17,15 +17,13 @@ import java.util.*;
 не забудьте про специальные типы исключений для игровых и неигровых ошибок
  */
 public class WordleGame {
-    PrintWriter log;
+    private PrintWriter log;
 
-    HashMap<Integer, Character> greenChars = new HashMap<>();
-    HashSet<Character> yellowChars = new HashSet<>();
-    HashSet<Character> grayChars = new HashSet<>();
+    private HashMap<Integer, Character> greenChars = new HashMap<>();
+    private HashSet<Character> yellowChars = new HashSet<>();
+    private HashSet<Character> grayChars = new HashSet<>();
 
-    Random random = new Random();
-
-    Scanner scanner = new Scanner(System.in);
+    private Random random = new Random();
 
     public void setAnswer(String answer) {
         this.answer = answer;
@@ -69,12 +67,11 @@ public class WordleGame {
                 continue;
             }
             if (attempt.length() != 5) {
-                throw new WordNotFoundInDictionary("В слове должно быть 5 букв");
+                throw new IllegalArgumentException("В слове должно быть 5 букв");
             }
             if (!dictionaryList.contains(attempt)) {
                 throw new WordNotFoundInDictionary("Такого слова в словаре нет");
             }
-
 
             for (int i = 0; i < attempt.length(); i++) {
                 char attemptChar = attempt.charAt(i);
@@ -86,10 +83,11 @@ public class WordleGame {
                 }
                 if (attemptChar == answerChar) {
                     greenChars.put(i, attemptChar);
-                    yellowChars.remove(attemptChar);
 
                 } else if (answer.contains(String.valueOf(attemptChar))) {
-                    yellowChars.add(attemptChar);
+                    if (!yellowChars.contains(attemptChar)) {
+                        yellowChars.add(attemptChar);
+                    }
                     isCorrect = false;
                 } else {
                     grayChars.add(attemptChar);
@@ -152,14 +150,14 @@ public class WordleGame {
         }
     }
 
-    public WordleGame(WordleDictionary dictionary, List<String> dictionaryList, PrintWriter log) throws IOException, WordNotFoundInDictionary {
+    public WordleGame(WordleDictionary dictionary, List<String> dictionaryList, PrintWriter log) throws IOException {
         this.dictionary = dictionary;
         this.dictionaryList = dictionary.getWords();
         this.log = log;
         fillAnswer();
     }
 
-    public void fillAnswer() throws IOException {
+    public void fillAnswer() {
         try {
             if (dictionaryList.isEmpty()) {
                 throw new WordNotFoundInDictionary("Словарь пуст");
@@ -173,16 +171,31 @@ public class WordleGame {
 
     public String charsHint(String attempt) {
         StringBuilder charHint = new StringBuilder();
+        HashMap<Character, Integer> anotherChars = new HashMap<>();
+
+        for (int i = 0; i < answer.length(); i++) {
+            char answerChar = answer.charAt(i);
+            anotherChars.put(answerChar, anotherChars.getOrDefault(answerChar, 0) + 1);
+        }
 
         for (int i = 0; i < attempt.length(); i++) {
             char attemptChar = attempt.charAt(i);
-
             if (i < answer.length() && attemptChar == answer.charAt(i)) {
                 charHint.append('+');
-            } else if (answer.contains(String.valueOf(attemptChar))) {
-                charHint.append('^');
+                anotherChars.put(attemptChar, anotherChars.getOrDefault(attemptChar, 0) - 1);
             } else {
                 charHint.append('-');
+            }
+        }
+        for (int i = 0; i < attempt.length(); i++) {
+            if (charHint.charAt(i) == '+') {
+                continue;
+            }
+            char attemptChar = attempt.charAt(i);
+
+            if (anotherChars.getOrDefault(attemptChar, 0) > 0) {
+                charHint.setCharAt(i, '^');
+                anotherChars.put(attemptChar, anotherChars.get(attemptChar) - 1);
             }
         }
         return charHint.toString();
